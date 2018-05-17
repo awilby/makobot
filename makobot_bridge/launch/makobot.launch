@@ -1,0 +1,10 @@
+<launch>
+
+  <arg name="mavlink_device" default="192.168.2.2:14550" />
+
+  <!-- Launch makobot_bridge node -->
+  <node respawn="true" pkg="makobot_bridge" type="node" name="makobot_bridge.py" output="screen">
+    <param name="device" value="$(arg mavlink_device)" />
+  </node>
+
+</launch>
