@@ -1,8 +1,9 @@
 /*
- * File: bluerov_apps/src/teleop_joy.cpp
+ * File: makobot_teleop/src/teleop_joy.cpp
  * Author: Josh Villbrandt <josh@javconcepts.com>
  * Date: February 2016
- * Description: Manual remote control of ROVs like the bluerov_apps.
+ * Edited: May 2018, Antonella Wilby
+ * Description: Manual remote control of MakoBot Underwater Robot.
  */
 
 #include <vector>
@@ -11,7 +12,7 @@
 #include <ros/console.h>
 #include <sensor_msgs/Joy.h>
 #include <dynamic_reconfigure/server.h>
-#include <bluerov_apps/teleop_joyConfig.h>
+#include <makobot_teleop/teleop_joyConfig.h>
 #include <mavros_msgs/CommandLong.h>
 #include <mavros_msgs/OverrideRCIn.h>
 
@@ -28,15 +29,15 @@ class TeleopJoy {
     void cmdTakeoffLand(bool takeoff);
     double computeAxisValue(const sensor_msgs::Joy::ConstPtr& joy, int index, double expo);
     uint16_t mapToPpm(double in);
-    void configCallback(bluerov_apps::teleop_joyConfig &update, uint32_t level);
+    void configCallback(makobot_teleop::teleop_joyConfig &update, uint32_t level);
     void joyCallback(const sensor_msgs::Joy::ConstPtr& joy);
 
     // node handle
     ros::NodeHandle nh;
 
     // dynamic reconfigure
-    dynamic_reconfigure::Server<bluerov_apps::teleop_joyConfig> server;
-    bluerov_apps::teleop_joyConfig config;
+    dynamic_reconfigure::Server<makobot_teleop::teleop_joyConfig> server;
+    makobot_teleop::teleop_joyConfig config;
 
     // pubs and subs
     ros::Subscriber joy_sub;
@@ -59,7 +60,7 @@ class TeleopJoy {
 
 TeleopJoy::TeleopJoy() {
   // connect dynamic reconfigure
-  dynamic_reconfigure::Server<bluerov_apps::teleop_joyConfig>::CallbackType f;
+  dynamic_reconfigure::Server<makobot_teleop::teleop_joyConfig>::CallbackType f;
   f = boost::bind(&TeleopJoy::configCallback, this, _1, _2);
   server.setCallback(f);
 
@@ -87,7 +88,7 @@ void TeleopJoy::spin() {
   }
 }
 
-void TeleopJoy::configCallback(bluerov_apps::teleop_joyConfig &update, uint32_t level) {
+void TeleopJoy::configCallback(makobot_teleop::teleop_joyConfig &update, uint32_t level) {
   ROS_INFO("reconfigure request received");
   config = update;
 }
