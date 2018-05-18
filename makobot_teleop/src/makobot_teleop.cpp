@@ -10,8 +10,8 @@ MakobotTeleop::MakobotTeleop() {
     // Subscribe to incoming joystick commands
     joy_sub = n.subscribe<sensor_msgs::Joy>("joy", 1, &MakobotTeleop::joy_callback, this);
 
-    // Instantiate service client for arming robot
-    //arm_client = n.serviceClient<makobot_teleop::Arm>("makobot_arm");
+
+    // Publish thrust commands
 
 
 }
@@ -42,7 +42,7 @@ void MakobotTeleop::joy_callback(const sensor_msgs::Joy::ConstPtr& joy) {
 
 
 /*
- *
+ * Sends a request to makobot_bridge service to arm the robot.
  */
 void MakobotTeleop::arm(bool arm_input) {
 

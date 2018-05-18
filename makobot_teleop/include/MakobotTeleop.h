@@ -2,6 +2,8 @@
 #include <geometry_msgs/Twist.h>
 #include <sensor_msgs/Joy.h>
 #include <dynamic_reconfigure/server.h>
+#include <mavros_msgs/CommandLong.h>
+#include <mavros_msgs/OverrideRCIn.h>
 #include <makobot_teleop/makobot_teleopConfig.h>
 #include <makobot_teleop/Arm.h>
 

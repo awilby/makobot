@@ -8,6 +8,7 @@ find_package(catkin REQUIRED COMPONENTS
   joy
   message_generation
   dynamic_reconfigure
+  mavros_msgs
 )
 
 ## Generate services in the 'srv' folder
