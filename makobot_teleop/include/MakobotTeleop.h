@@ -16,8 +16,11 @@ class MakobotTeleop {
         std::vector<int> previous_buttons;
 
 
+        // ROS Node
+        ros::NodeHandle n;
+
         // Service for arming robot
-        ros::ServiceClient arm_client;
+        ros::ServiceClient arm_client = n.serviceClient<makobot_teleop::Arm>("makobot_arm");
 
         // Subscriber for joystick input
         ros::Subscriber joy_sub;
@@ -31,7 +34,7 @@ class MakobotTeleop {
 
 
         // Arms robot by requesting arm from makobot_bridge server
-        void arm(bool arm_input, ros::ServiceClient arm_client);
+        void arm(bool arm_input);
 
         // Joystick callback function
         void joy_callback(const sensor_msgs::Joy::ConstPtr& joy);

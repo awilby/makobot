@@ -10,10 +10,11 @@
 
   <!-- <url type="website">http://wiki.ros.org/makobot_bridge</url> -->
 
-  <!-- <author email="jane.doe@example.com">Jane Doe</author> -->
+  <author email="awilby@eng.ucsd.edu">Antonella Wilby</author>
 
   <buildtool_depend>catkin</buildtool_depend>
 
+  <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
   <build_depend>mavros</build_depend>
   <build_depend>mavros_msgs</build_depend>
@@ -23,6 +24,7 @@
   <build_depend>geometry_msgs</build_depend>
   <build_depend>diagnostic_msgs</build_depend>
 
+  <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>mavros</run_depend>
   <run_depend>mavros_msgs</run_depend>

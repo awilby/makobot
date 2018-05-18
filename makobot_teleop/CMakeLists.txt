@@ -33,17 +33,13 @@ catkin_package(
   INCLUDE_DIRS include
 )
 
-include_directories(
-  include
-  ${catkin_INCLUDE_DIRS}
-)
-
 ###########
 ## Build ##
 ###########
 
 ## Specify additional locations of header files
 include_directories(
+  include
   ${catkin_INCLUDE_DIRS}
 )
 

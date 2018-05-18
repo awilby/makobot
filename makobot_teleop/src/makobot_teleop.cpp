@@ -3,7 +3,7 @@
 
 MakobotTeleop::MakobotTeleop() {
 
-    ros::NodeHandle n;
+    //ros::NodeHandle n;
 
 
 
@@ -11,7 +11,7 @@ MakobotTeleop::MakobotTeleop() {
     joy_sub = n.subscribe<sensor_msgs::Joy>("joy", 1, &MakobotTeleop::joy_callback, this);
 
     // Instantiate service client for arming robot
-    arm_client = n.serviceClient<makobot_teleop::Arm>("makobot_arm");
+    //arm_client = n.serviceClient<makobot_teleop::Arm>("makobot_arm");
 
 
 }
@@ -31,10 +31,10 @@ void MakobotTeleop::joy_callback(const sensor_msgs::Joy::ConstPtr& joy) {
 
     // If robot is armed or disarmed, send service request to makobot_bridge
     if(risingEdge(joy, config.disarm_button)) {
-        arm(false, arm_client);
+        arm(false);
 
     } else if(risingEdge(joy, config.arm_button)) {
-        arm(true, arm_client);
+        arm(true);
     }
 
 
@@ -44,7 +44,7 @@ void MakobotTeleop::joy_callback(const sensor_msgs::Joy::ConstPtr& joy) {
 /*
  *
  */
-void MakobotTeleop::arm(bool arm_input, ros::ServiceClient arm_client) {
+void MakobotTeleop::arm(bool arm_input) {
 
     makobot_teleop::Arm srv;
     srv.request.arm = arm_input;
