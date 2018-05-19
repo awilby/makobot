@@ -1,0 +1,2 @@
+# link /dev/input/js0 to /dev/xboxcontroller
+KERNEL=="js*", SYMLINK+="xboxcontroller"
