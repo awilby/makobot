@@ -7,7 +7,6 @@ add_compile_options(-std=c++11)
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED COMPONENTS
   roscpp
-  geometry_msgs
   joy
   message_generation
   dynamic_reconfigure
