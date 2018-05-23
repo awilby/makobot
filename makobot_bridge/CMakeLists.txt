@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8.3)
 project(makobot_bridge)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 find_package(catkin REQUIRED
@@ -90,9 +90,9 @@ include_directories(
 # add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-add_executable(makobot_bridge src/makobot_bridge.cpp)
-add_dependencies(makobot_bridge ${PROJECT_NAME}_generate_messages_cpp)
-target_link_libraries(makobot_bridge ${catkin_LIBRARIES})
+add_executable(makobot_bridge_node src/makobot_bridge_node.cpp)
+add_dependencies(makobot_bridge_node ${PROJECT_NAME}_generate_messages_cpp)
+target_link_libraries(makobot_bridge_node ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the

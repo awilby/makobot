@@ -1,0 +1,24 @@
+<launch>
+
+  <arg name="mavlink_device" default="192.168.2.2:14550" />
+  <arg name="record_bag" default="false" />
+
+  <!-- Launch makobot_bridge node -->
+  <node respawn="true" pkg="makobot_bridge" type="node" name="makobot_bridge_node" output="screen">
+    <param name="device" value="$(arg mavlink_device)" />
+  </node>
+
+
+  <!-- Start driver for front-facing camera -->
+  <include file="$(find makobot_bridge)/launch/front_camera.launch" />
+
+  <!-- Start mavros for talking to pixhawk -->
+  <include file="$(find makobot_bridge)/launch/apm.launch" />
+
+  <!-- Record bagfile -->
+  <group if="$(arg record_bag)">
+    <node pkg="rosbag" type="record" name"record" args="-a" />
+  </group>
+
+
+</launch>

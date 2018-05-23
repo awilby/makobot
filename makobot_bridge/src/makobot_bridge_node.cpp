@@ -1,14 +1,11 @@
 /*
- * TODO
+ * Node for interfacing Makobot sensors and Pixhawk with ROS.
  * Author: Antonella Wilby <awilby@ucsd.edu>
  */
 
 #include "MakobotBridge.h"
 
 MakobotBridge::MakobotBridge() {
-
-    // Instantiate ROS node handle
-    //ros::NodeHandle n;
 
     // Mavros service for sending arm command
 
@@ -56,7 +53,11 @@ int main(int argc, char **argv) {
 
     ros::init(argc, argv, "makobot_bridge");
 
+    ROS_INFO("Starting up Makobot...");
+
     MakobotBridge makobot_bridge;
+
+    ROS_INFO("Makobot successfully started.");
 
     ros::spin();
 
