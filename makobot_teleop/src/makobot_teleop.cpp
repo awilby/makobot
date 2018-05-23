@@ -3,12 +3,33 @@
 
 MakobotTeleop::MakobotTeleop() {
 
+    // Set up dynamic reconfigure server
+    dynamic_reconfigure::Server<makobot_teleop::makobot_teleopConfig>::CallbackType f;
+    f = boost::bind(&MakobotTeleop::configCallback, this, _1, _2);
+    server.setCallback(f);
+
     // Subscribe to incoming joystick commands
     joy_sub = n.subscribe<sensor_msgs::Joy>("joy", 1, &MakobotTeleop::joy_callback, this);
 
     // Publish thrust commands on mavros rc_override
     rc_override_pub = n.advertise<mavros_msgs::OverrideRCIn>("/mavros/rc/override", 1);
 
+    // Initial state of vehicle
+    mode = MODE_STABILIZE;
+    camera_tilt = CAM_TILT_RESET;
+    initLT = false;
+    initRT = false;
+
+    ROS_INFO("Joystick teleoperation ready.");
+}
+
+
+/*
+ * Callback function for dynamic reconfigure server.
+ */
+void MakobotTeleop::configCallback(makobot_teleop::makobot_teleopConfig &update, uint32_t level) {
+  ROS_INFO("Reconfigure request received.");
+  config = update;
 }
 
 
@@ -17,12 +38,10 @@ MakobotTeleop::MakobotTeleop() {
  */
 void MakobotTeleop::joy_callback(const sensor_msgs::Joy::ConstPtr& joy) {
 
-
     // Initialize previous buttons
     if (previous_buttons.size() != joy->buttons.size()) {
          previous_buttons = std::vector<int>(joy->buttons);
     }
-
 
     // ARMING
     if (risingEdge(joy, config.disarm_button)) {
@@ -35,11 +54,17 @@ void MakobotTeleop::joy_callback(const sensor_msgs::Joy::ConstPtr& joy) {
     // MODE SWITCHING: Manual, stabilize, depth hold
     if (risingEdge(joy, config.stabilize_button)) {
         mode = MODE_STABILIZE;
+        ROS_INFO("Entered stabilized flight mode.");
 
-    } else if (risingEdge(joy, config.alt_hold_button)) {
-        mode = MODE_ALT_HOLD;
-    }
+    } else if (risingEdge(joy, config.depth_hold_button)) {
+        mode = MODE_DEPTH_HOLD;
+        ROS_INFO("Entered depth hold mode.");
 
+    }/* else if (risingEdge(joy, config.manual_button)) {
+        mode = MODE_MANUAL;
+        ROS_INFO("Entered manual flight mode.");
+
+    }*/
 
     // CAMERA TILT
     if (risingEdge(joy, config.cam_tilt_reset)) {
@@ -146,46 +171,15 @@ uint16_t MakobotTeleop::mapToPpm(double in) {
     } else {
         return out;
     }
+
 }
 
-
 /*
- * Sends a request to makobot_bridge service to arm the robot.
+ * Sends a request to mavros command service to arm robot.
+ * Input: boolean value indicating whether to arm or disarm
+ *     TRUE value means arm robot
+ *     FALSE value means disarm robot
  */
-/*void MakobotTeleop::arm(bool arm_input) {
-
-    makobot_teleop::Arm srv;
-    srv.request.arm = arm_input;
-
-    // If arm/disarm is successful
-    if (arm_client.call(srv))
-    {
-
-        // If request was for arming
-        if (arm_input) {
-            ROS_INFO("ROBOT ARMED.");
-
-        // If request was for disarming
-        } else {
-            ROS_INFO("ROBOT DISARMED.");
-        }
-
-    // Otherwise, arm/disarm wasn't successful, log an error
-    } else {
-
-        // If request was for arming
-        if (arm_input) {
-            ROS_ERROR("FAILED TO ARM.");
-
-        // If request was for disarming
-        } else {
-            ROS_ERROR("FAILED TO DISARM. Warning: Robot is still armed!");
-        }
-
-    }
-
-}*/
-
 void MakobotTeleop::arm(bool arm_input) {
 
     // Set up service request from mavros command service
@@ -197,8 +191,19 @@ void MakobotTeleop::arm(bool arm_input) {
     // Send request to service
     if (arm_client.call(srv)) {
         ROS_INFO(arm_input ? "Armed" : "Disarmed" );
+
+    // Arm/disarm wasn't successful, log an error
     } else {
-        ROS_ERROR("Failed to update arming");
+
+        // If request was for arming
+        if (arm_input) {
+            ROS_ERROR("Failed to arm robot.");
+
+            // If request was for disarming
+        } else {
+            ROS_ERROR("FAILED TO DISARM. WARNING: Robot is still armed!");
+        }
+
     }
 
 }
@@ -207,11 +212,11 @@ void MakobotTeleop::arm(bool arm_input) {
 
 
 /*
- *
+ * Checks for button press.
  */
 bool MakobotTeleop::risingEdge(const sensor_msgs::Joy::ConstPtr& joy, int index) {
 
-  return (joy->buttons[index] == 1 && previous_buttons[index] == 0);
+    return (joy->buttons[index] == 1 && previous_buttons[index] == 0);
 
 }
 
@@ -223,6 +228,8 @@ int main(int argc, char ** argv) {
 
     // Initialize ROS node
     ros::init(argc, argv, "makobot_teleop");
+
+    ROS_INFO("Starting joystick control...");
 
     MakobotTeleop makobot_teleop;
 

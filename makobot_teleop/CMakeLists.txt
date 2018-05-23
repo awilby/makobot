@@ -13,14 +13,6 @@ find_package(catkin REQUIRED COMPONENTS
   mavros_msgs
 )
 
-## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-  Arm.srv
-)
-
-generate_messages()
-
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
 ################################################

@@ -17,7 +17,7 @@ class MakobotTeleop {
         // CONSTANTS: see https://pixhawk.ethz.ch/mavlink/
         enum {COMPONENT_ARM_DISARM=400};
         enum {FORCE_DISARM = 21196};
-        enum {MODE_STABILIZE = 1000, MODE_ALT_HOLD = 2000};  // ppm in uS
+        enum {MODE_STABILIZE = 1000, MODE_DEPTH_HOLD = 2000, MODE_MANUAL=1000};  // ppm in uS
         enum {PPS_MIN = 1000, PPS_MAX = 2000};  // ppm in uS
         enum {CAM_TILT_RESET = 1500};  // ppm in uS
 
@@ -33,8 +33,12 @@ class MakobotTeleop {
         // ROS Node
         ros::NodeHandle n;
 
+        // Dynamic reconfigure
+        dynamic_reconfigure::Server<makobot_teleop::makobot_teleopConfig> server;
+        makobot_teleop::makobot_teleopConfig config;
+
         // Service for arming robot
-        ros::ServiceClient arm_client = n.serviceClient<makobot_teleop::Arm>("makobot_arm");
+        ros::ServiceClient arm_client = n.serviceClient<mavros_msgs::CommandLong>("/mavros/cmd/command");
 
         // Subscriber for joystick input
         ros::Subscriber joy_sub;
@@ -42,13 +46,12 @@ class MakobotTeleop {
         // Publisher for thruster msgs
         ros::Publisher rc_override_pub;
 
-        // Dynamic reconfigure
-        dynamic_reconfigure::Server<makobot_teleop::makobot_teleopConfig> server;
-        makobot_teleop::makobot_teleopConfig config;
 
-
-        // Arms robot by requesting arm from mavros service
+        // Arms robot by requesting arm from mavros command service
         void arm(bool arm_input);
+
+        // Dynamic reconfigure server callback function
+        void configCallback(makobot_teleop::makobot_teleopConfig &update, uint32_t level);
 
         // Joystick callback function
         void joy_callback(const sensor_msgs::Joy::ConstPtr& joy);
