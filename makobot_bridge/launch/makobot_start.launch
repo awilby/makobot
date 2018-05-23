@@ -17,7 +17,7 @@
 
   <!-- Record bagfile -->
   <group if="$(arg record_bag)">
-    <node pkg="rosbag" type="record" name"record" args="-a" />
+    <node pkg="rosbag" type="record" name="record" args="-a" />
   </group>
 
 
