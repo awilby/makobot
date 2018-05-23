@@ -1,0 +1,9 @@
+<launch>
+
+  <!-- Launch makobot_bridge to start up robot -->
+  <include file="$(find makobot_bridge)/launch/makobot_start.launch" />
+
+  <!-- Launch RVIZ for topside monitoring -->
+  <node pkg="rviz" type="rviz" name="rviz" output="screen" args="-d $(find makobot)/rviz/makobot.config" /> 
+
+</launch>
