@@ -3,7 +3,7 @@
   <!-- Start the makobot and connect to pixhawk -->
   <include file="$(find makobot_bridge)/launch/makobot_bridge.launch" />
 
-  <!- Start the raspberry pi camera node -->
+  <!-- Start the raspberry pi camera node -->
   <include file="$(find makobot_bridge)/launch/front_camera.launch" />
 
   <!-- Start the stereo cameras -->
