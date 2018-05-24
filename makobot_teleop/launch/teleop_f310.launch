@@ -8,7 +8,7 @@
   </node>
 
   <!-- remap from f310 mappings to xbox mappings -->
-  <node pkg="bluerov_apps" type="joystick_remapper" name="joystick_remapper" output="screen" required="true">
+  <node pkg="makobot_teleop" type="joystick_remapper" name="joystick_remapper" output="screen" required="true">
     <param name="user_warning" value="Make sure the Mode light is off on the F310 controller!" type="str"/>
     <param name="joy_source" value="joy_f310" type="str"/>
     <param name="joy_dest" value="joy" type="str"/>
@@ -16,5 +16,5 @@
   </node>
 
   <!-- start the teleop app -->
-  <node pkg="bluerov_apps" type="teleop_joy" name="teleop_joy" output="screen" required="true"></node>
+  <node pkg="makobot_teleop" type="makobot_teleop" name="makobot_teleop" output="screen" required="true"></node>
 </launch>
