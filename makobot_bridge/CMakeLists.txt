@@ -90,9 +90,9 @@ include_directories(
 # add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 ## Declare a C++ executable
-add_executable(makobot_bridge_node src/makobot_bridge_node.cpp)
-add_dependencies(makobot_bridge_node ${PROJECT_NAME}_generate_messages_cpp)
-target_link_libraries(makobot_bridge_node ${catkin_LIBRARIES})
+#add_executable(makobot_bridge_node src/makobot_bridge_node.cpp)
+#add_dependencies(makobot_bridge_node ${PROJECT_NAME}_generate_messages_cpp)
+#target_link_libraries(makobot_bridge_node ${catkin_LIBRARIES})
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
