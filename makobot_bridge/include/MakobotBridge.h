@@ -3,7 +3,7 @@
 #include <mavros_msgs/CommandLong.h>
 #include <mavros_msgs/OverrideRCIn.h>
 #include <dynamic_reconfigure/server.h>
-#include <makobot_teleop/Arm.h>
+//#include <makobot_teleop/Arm.h>
 #include <geometry_msgs/TwistStamped.h>
 #include <sensor_msgs/BatteryState.h>
 #include <sensor_msgs/Image.h>

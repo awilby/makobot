@@ -1,9 +1,25 @@
 <launch>
 
+  <!-- Args -->
+  <arg name="record_bag" default="false" />
+
   <!-- Launch makobot_bridge to start up robot -->
-  <include file="$(find makobot_bridge)/launch/makobot_start.launch" />
+  <group>
+    <machine name="makobot-pi" address="makobot-pi" user="mako" default="true" />
+    <include file="$(find makobot_bridge)/launch/makobot_start.launch"/>
+  </group>
+
+  <!-- Machine setup -->
+  <include file="$(find makobot)/cfg/machines.xml" />
 
   <!-- Launch RVIZ for topside monitoring -->
-  <node pkg="rviz" type="rviz" name="rviz" output="screen" args="-d $(find makobot)/rviz/makobot.config" /> 
+  <node machine="topside" pkg="rviz" type="rviz" name="rviz" output="screen" args="-d $(find makobot)/rviz/makobot.config" /> 
+
+
+  <!-- Record bagfile -->
+  <group if="$(arg record_bag)">
+    <node machine="topside" pkg="rosbag" type="record" name="record" args="-a" />
+  </group>
+
 
 </launch>
