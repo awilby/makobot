@@ -4,7 +4,7 @@
 #include <mavros_msgs/CommandLong.h>
 #include <mavros_msgs/OverrideRCIn.h>
 #include <makobot_teleop/makobot_teleopConfig.h>
-#include <makobot_teleop/Arm.h>
+//#include <makobot_teleop/Arm.h>
 
 
 class MakobotTeleop {

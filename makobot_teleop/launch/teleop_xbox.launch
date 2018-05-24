@@ -1,10 +1,14 @@
 <launch>
+  
+  <!-- Machine setup -->
+  <include file="$(find makobot)/cfg/machines.xml" />
+
   <!-- start the joystick driver -->
-  <node respawn="true" pkg="joy" type="joy_node" name="joy_node" output="screen">
+  <node machine="topside" respawn="true" pkg="joy" type="joy_node" name="joy_node" output="screen">
     <param name="dev" value="/dev/xboxcontroller" type="string"/>
   </node>
 
   <!-- start the teleop app -->
-  <node pkg="makobot_teleop" type="makobot_teleop" name="makobot_teleop" output="screen" />
+  <node machine="topside" pkg="makobot_teleop" type="makobot_teleop" name="makobot_teleop" output="screen" />
 
 </launch>

@@ -60,11 +60,11 @@ void MakobotTeleop::joy_callback(const sensor_msgs::Joy::ConstPtr& joy) {
         mode = MODE_DEPTH_HOLD;
         ROS_INFO("Entered depth hold mode.");
 
-    }/* else if (risingEdge(joy, config.manual_button)) {
+    } else if (risingEdge(joy, config.manual_button)) {
         mode = MODE_MANUAL;
         ROS_INFO("Entered manual flight mode.");
 
-    }*/
+    }
 
     // CAMERA TILT
     if (risingEdge(joy, config.cam_tilt_reset)) {

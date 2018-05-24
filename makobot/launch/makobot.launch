@@ -2,6 +2,7 @@
 
   <!-- Args -->
   <arg name="record_bag" default="false" />
+  <arg name="enable_teleop" default="true" />
 
   <!-- Launch makobot_bridge to start up robot -->
   <group>
@@ -14,6 +15,11 @@
 
   <!-- Launch RVIZ for topside monitoring -->
   <node machine="topside" pkg="rviz" type="rviz" name="rviz" output="screen" args="-d $(find makobot)/rviz/makobot.config" /> 
+
+  <!-- Enable teleoperation -->
+  <group if="$(arg enable_teleop)">
+    <include file="$(find makobot_teleop)/launch/teleop_xbox.launch" />
+  </group>
 
 
   <!-- Record bagfile -->
