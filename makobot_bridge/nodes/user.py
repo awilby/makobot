@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import cv2
+#import cv2
 import rospy
 import time
 
@@ -136,8 +136,8 @@ class Code(object):
 
                 # Show video output
                 frame = self.cam.frame()
-                cv2.imshow('frame', frame)
-                cv2.waitKey(1)
+                #cv2.imshow('frame', frame)
+                #cv2.waitKey(1)
             except Exception as error:
                 print('imshow error:', error)
 
