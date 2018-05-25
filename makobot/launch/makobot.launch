@@ -17,10 +17,10 @@
   <node machine="topside" pkg="rviz" type="rviz" name="rviz" output="screen" args="-d $(find makobot)/rviz/makobot.config" /> 
 
   <!-- Enable teleoperation -->
-  <group if="$(arg enable_teleop)">
+ <!-- <group if="$(arg enable_teleop)">
     <include file="$(find makobot_teleop)/launch/teleop_xbox.launch" />
   </group>
-
+-->
 
   <!-- Record bagfile -->
   <group if="$(arg record_bag)">
