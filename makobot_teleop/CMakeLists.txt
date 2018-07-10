@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   dynamic_reconfigure
   mavros_msgs
+  makobot_bridge
 )
 
 ################################################
@@ -38,11 +39,6 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-#add_executable(joystick_remapper src/joystick_remapper.cpp)
-#add_dependencies(joystick_remapper ${catkin_EXPORTED_TARGETS})
-#target_link_libraries(joystick_remapper ${catkin_LIBRARIES})
-
 add_executable(makobot_teleop src/makobot_teleop.cpp)
 add_dependencies(makobot_teleop ${PROJECT_NAME}_generate_messages_cpp makobot_teleop_gencfg)
 target_link_libraries(makobot_teleop ${catkin_LIBRARIES})
-

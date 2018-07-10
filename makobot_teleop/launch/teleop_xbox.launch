@@ -3,12 +3,14 @@
   <!-- Machine setup -->
   <include file="$(find makobot)/cfg/machines.xml" />
 
-  <!-- start the joystick driver -->
+  <!-- Start the joystick driver -->
   <node machine="topside" respawn="true" pkg="joy" type="joy_node" name="joy_node" output="screen">
-    <param name="dev" value="/dev/xboxcontroller" type="string"/>
+    <param name="dev" value="/dev/xboxcontroller" type="string" />
   </node>
 
-  <!-- start the teleop app -->
-  <node machine="topside" pkg="makobot_teleop" type="makobot_teleop" name="makobot_teleop" output="screen" />
+  <!-- Start the teleoperation node -->
+  <node machine="topside" pkg="makobot_teleop" type="makobot_teleop" name="makobot_teleop" output="screen">
+    <param name="joystick" value="xbox" type="string" />
+  </node>
 
 </launch>

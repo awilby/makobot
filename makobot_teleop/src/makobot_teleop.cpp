@@ -3,16 +3,20 @@
 
 MakobotTeleop::MakobotTeleop() {
 
+    // Load parameters
+    ros::NodeHandle nh_param("~");
+    nh_param.param<std::string>("joystick", joystick, "");
+
     // Set up dynamic reconfigure server
     dynamic_reconfigure::Server<makobot_teleop::makobot_teleopConfig>::CallbackType f;
     f = boost::bind(&MakobotTeleop::configCallback, this, _1, _2);
     server.setCallback(f);
 
     // Subscribe to incoming joystick commands
-    joy_sub = n.subscribe<sensor_msgs::Joy>("joy", 1, &MakobotTeleop::joy_callback, this);
+    joy_sub = nh_.subscribe<sensor_msgs::Joy>("joy", 1, &MakobotTeleop::joy_callback, this);
 
     // Publish thrust commands on mavros rc_override
-    rc_override_pub = n.advertise<mavros_msgs::OverrideRCIn>("/mavros/rc/override", 1);
+    //rc_override_pub = nh_.advertise<mavros_msgs::OverrideRCIn>("/mavros/rc/override", 1); // TODO: MAKOBOT_BRIDGE
 
     // Initial state of vehicle
     mode = MODE_STABILIZE;
@@ -36,7 +40,14 @@ void MakobotTeleop::configCallback(makobot_teleop::makobot_teleopConfig &update,
 /*
  * Callback function for incoming joystick commands.
  */
-void MakobotTeleop::joy_callback(const sensor_msgs::Joy::ConstPtr& joy) {
+void MakobotTeleop::joy_callback(const sensor_msgs::Joy::ConstPtr& input) {
+
+    // If we're using an f310 joystick, remap buttons
+    if(joystick == "f310") {
+        sensor_msgs::Joy joy = f310_RemapJoystick(input);
+    }
+
+    sensor_msgs::Joy::ConstPtr joy = input;
 
     // Initialize previous buttons
     if (previous_buttons.size() != joy->buttons.size()) {
@@ -44,11 +55,12 @@ void MakobotTeleop::joy_callback(const sensor_msgs::Joy::ConstPtr& joy) {
     }
 
     // ARMING
-    if (risingEdge(joy, config.disarm_button)) {
-        arm(false);
+    if (risingEdge(joy, config.disarm_button)) {     // Disarm
+       request_arm(false);
 
-    } else if(risingEdge(joy, config.arm_button)) {
-        arm(true);
+    } else if(risingEdge(joy, config.arm_button)) {  // Arm
+        request_arm(true);
+
     }
 
     // MODE SWITCHING: Manual, stabilize, depth hold
@@ -84,7 +96,7 @@ void MakobotTeleop::joy_callback(const sensor_msgs::Joy::ConstPtr& joy) {
 
 
     // RC OVERRIDE MESSAGE
-    mavros_msgs::OverrideRCIn msg;
+   /* mavros_msgs::OverrideRCIn msg;      // TODO: MAKOBOT_BRIDGE
 
     // THRUSTER CONTROL: forward, strafe, throttle
     msg.channels[5] = mapToPpm(config.x_scaling  * computeAxisValue(joy, config.x_axis,  config.expo)); // forward  (x)
@@ -100,7 +112,7 @@ void MakobotTeleop::joy_callback(const sensor_msgs::Joy::ConstPtr& joy) {
     msg.channels[4] = mode; // mode
     msg.channels[7] = camera_tilt; // camera tilt
 
-    rc_override_pub.publish(msg);
+    rc_override_pub.publish(msg);*/
 
 }
 
@@ -174,51 +186,59 @@ uint16_t MakobotTeleop::mapToPpm(double in) {
 
 }
 
-/*
- * Sends a request to mavros command service to arm robot.
- * Input: boolean value indicating whether to arm or disarm
- *     TRUE value means arm robot
- *     FALSE value means disarm robot
- */
-void MakobotTeleop::arm(bool arm_input) {
-
-    // Set up service request from mavros command service
-    mavros_msgs::CommandLong srv;
-    srv.request.command = COMPONENT_ARM_DISARM;
-    srv.request.param1 = (arm_input ? 1 : 0);
-    srv.request.param2 = FORCE_DISARM;
-
-    // Send request to service
-    if (arm_client.call(srv)) {
-        ROS_INFO(arm_input ? "Armed" : "Disarmed" );
-
-    // Arm/disarm wasn't successful, log an error
-    } else {
-
-        // If request was for arming
-        if (arm_input) {
-            ROS_ERROR("Failed to arm robot.");
-
-            // If request was for disarming
-        } else {
-            ROS_ERROR("FAILED TO DISARM. WARNING: Robot is still armed!");
-        }
-
-    }
-
-}
-
-
-
 
 /*
  * Checks for button press.
  */
 bool MakobotTeleop::risingEdge(const sensor_msgs::Joy::ConstPtr& joy, int index) {
-
     return (joy->buttons[index] == 1 && previous_buttons[index] == 0);
+}
+
+
+/*
+ * Sends a request to makobot_bridge arming service to arm the robot.
+ */
+void MakobotTeleop::request_arm(bool arm_input) {
+
+    makobot_bridge::Arm srv;
+    srv.request.arm = arm_input;
+
+    // Call makobot_bridge arming service (pixhawk_bridge handles logging info)
+    arm_client.call(srv);
 
 }
+
+
+/*
+ * Remaps incoming joystick commands from F310 (Logitech) joystick because d-pad buttons
+ * are treated as axes on F310.
+ */
+sensor_msgs::Joy MakobotTeleop::f310_RemapJoystick(const sensor_msgs::Joy::ConstPtr& f310) {
+
+    // remapped sensor message
+    sensor_msgs::Joy remap;
+    remap.header = f310->header;
+
+    // translate axes
+    // f310 axes (from): [left X, left Y, LT, right X, right Y, RT, pad L/R, pad U/D]
+    // xbox axes (to):     [left X, left Y, LT, right X, right Y, RT]
+    remap.axes = std::vector<float>(f310->axes);
+    remap.axes.pop_back();
+    remap.axes.pop_back();
+
+    // translate buttons
+    // f310 buttons (from): [A, B, X, Y LB, RB, BACK, START, POWER, left stick, right stick click]
+    // xbox buttons (to):     [A, B, X, Y LB, RB, BACK, START, POWER, left stick, right stick click, pad L, pad R, pad U, pad D]
+    remap.buttons = std::vector<int>(f310->buttons);
+    remap.buttons.push_back((f310->axes[6] > 0.5) ? 1 : 0);
+    remap.buttons.push_back((f310->axes[6] < -0.5) ? 1 : 0);
+    remap.buttons.push_back((f310->axes[7] > 0.5) ? 1 : 0);
+    remap.buttons.push_back((f310->axes[7] < -0.5) ? 1 : 0);
+
+    return remap;
+
+}
+
 
 
 /*
@@ -226,7 +246,7 @@ bool MakobotTeleop::risingEdge(const sensor_msgs::Joy::ConstPtr& joy, int index)
  */
 int main(int argc, char ** argv) {
 
-    // Initialize ROS node
+    // Initialize ROS node, including joystick parameter with current joystick type
     ros::init(argc, argv, "makobot_teleop");
 
     ROS_INFO("Starting joystick control...");

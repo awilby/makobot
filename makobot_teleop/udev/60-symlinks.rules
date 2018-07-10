@@ -1,2 +1,5 @@
 # link /dev/input/js0 to /dev/xboxcontroller
-KERNEL=="js*", SYMLINK+="xboxcontroller"
+KERNEL=="js0", SYMLINK+="xboxcontroller"
+
+# link /dev/input/js1 to /dev/f310controller
+KERNEL=="js1", SYMLINK+="f310controller"
