@@ -2,14 +2,14 @@
 
   <!-- Args -->
   <arg name="record_bag" default="false" />
-  <arg name="enable_teleop" default="true" />
+  <arg name="enable_teleop" default="false" />
 
   <!-- Launch makobot_bridge to start up robot -->
-  <group>
+<!--  <group>
     <machine name="makobot-pi" address="makobot-pi" user="mako" default="true" />
     <include file="$(find makobot_bridge)/launch/makobot_start.launch"/>
   </group>
-
+-->
   <!-- Machine setup -->
   <include file="$(find makobot)/cfg/machines.xml" />
 
@@ -17,10 +17,21 @@
   <node machine="topside" pkg="rviz" type="rviz" name="rviz" output="screen" args="-d $(find makobot)/rviz/makobot.config" /> 
 
   <!-- Enable teleoperation -->
- <!-- <group if="$(arg enable_teleop)">
+  <group if="$(arg enable_teleop)">
     <include file="$(find makobot_teleop)/launch/teleop_xbox.launch" />
   </group>
--->
+
+  <!-- Launch port camera -->
+  <!--<group>
+    <machine name="odroid-port" address="odroid-port" user="mako" />
+    <include file="$(find makobot)/launch/ids_port.launch" />
+  </group>-->
+
+  <!-- Launch starboard camera -->
+  <!--<group>
+    <machine name="odroid-strbd" address="odroid-strbd" user="mako" />
+    <include file="$(find makobot)/launch/ids_strbd.launch" />
+  </group>-->
 
   <!-- Record bagfile -->
   <group if="$(arg record_bag)">

@@ -13,7 +13,7 @@
   -->
 
   <!-- Auxiliary command computer: ODROID xu4 in auxiliary housing -->
-  <machine name="odroid-main" address="odroid-main" env-loader="/opt/ros/kinetic/env.sh" user="mako" />
+  <machine name="odroid-aux" address="odroid-aux" env-loader="/opt/ros/kinetic/env.sh" user="mako" />
 
   <!-- Starboard computer: ODROID in starboard camera housing -->
   <machine name="odroid-strbd" address="odroid-strbd" env-loader="/opt/ros/kinetic/env.sh" user="mako" />
