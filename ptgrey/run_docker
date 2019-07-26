@@ -1,2 +1,2 @@
-docker run -it --rm --network host pointgrey-ros bash
+docker run -it -v /home/fitlet/ros_workspace/src/makobot/ptgrey:/ptgrey --rm --network host pointgrey-ros bash
 
