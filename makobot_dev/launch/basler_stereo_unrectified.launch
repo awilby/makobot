@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<launch>
+    <arg name="respawn" default="false" />
+    <arg name="debug" default="false" />
+    <arg name="mtu_size" default="8192" />
+    <arg name="startup_user_set" default="CurrentSetting" />
+    <arg name="enable_status_publisher" default="true" />
+    <arg name="enable_current_params_publisher" default="true" />
+    <arg name="config_basler1" default="$(find makobot_dev)/cfg/basler1.yaml" />
+    <arg name="config_basler2" default="$(find makobot_dev)/cfg/basler2.yaml" />
+
+    <arg unless="$(arg debug)" name="launch_prefix1" value="" />
+    <arg unless="$(arg debug)" name="launch_prefix2" value="" />
+    <arg if="$(arg debug)" name="launch_prefix1" value="valgrind --tool=callgrind --callgrind-out-file='callgrind.pyloncameranode1.%p'" />
+    <arg if="$(arg debug)" name="launch_prefix2" value="valgrind --tool=callgrind --callgrind-out-file='callgrind.pyloncameranode2.%p'" />
+
+    <group ns="stereo">
+
+	    <!-- Left camera node -->
+	    <node pkg="pylon_camera" type="pylon_camera_node" name="left" output="screen"
+		  respawn="$(arg respawn)" launch-prefix="$(arg launch_prefix1)">
+		<rosparam command="load" file="$(arg config_basler1)" />
+		<param name="gige/mtu_size" value="$(arg mtu_size)"/>
+		<param name="startup_user_set" value="$(arg startup_user_set)"/>
+		<param name="enable_status_publisher" value="$(arg enable_status_publisher)"/>
+		<param name="enable_current_params_publisher" value="$(arg enable_current_params_publisher)"/>
+	    </node>
+
+	    <!-- Right camera node -->
+	    <node pkg="pylon_camera" type="pylon_camera_node" name="right" output="screen"
+		  respawn="$(arg respawn)" launch-prefix="$(arg launch_prefix2)">
+		<rosparam command="load" file="$(arg config_basler2)" />
+		<param name="gige/mtu_size" value="$(arg mtu_size)"/>
+		<param name="startup_user_set" value="$(arg startup_user_set)"/>
+		<param name="enable_status_publisher" value="$(arg enable_status_publisher)"/>
+		<param name="enable_current_params_publisher" value="$(arg enable_current_params_publisher)"/>
+	    </node>
+
+    </group> 
+
+</launch>
