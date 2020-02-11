@@ -1,0 +1,15 @@
+<launch>
+
+  <!-- MACHINE SETUP -->
+
+  <!-- Make sure you have added these hostnames to your /etc/hosts file on the topside computer,
+       otherwise this launch file will not work. -->
+
+  <!-- Topside computer -->
+  <machine name="topside" address="localhost" env-loader="/opt/ros/melodic/env.sh" user="antonella" />
+
+
+  <!-- Fitlet2 -->
+  <machine name="fitlet2-1" address="192.168.2.13" env-loader="/opt/ros/melodic/env.sh" user="fitlet" />
+
+</launch>
