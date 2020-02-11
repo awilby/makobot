@@ -1,0 +1,3 @@
+[submodule "microstrain_3dmgx2_imu"]
+	path = microstrain_3dmgx2_imu
+	url = https://github.com/awilby/microstrain_3dmgx2_imu.git
