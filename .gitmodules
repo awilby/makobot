@@ -7,3 +7,6 @@
 [submodule "kodak_sp360"]
 	path = kodak_sp360
 	url = https://github.com/awilby/kodak_sp360.git
+[submodule "bluerov_ros"]
+	path = bluerov_ros
+	url = https://github.com/awilby/bluerov_ros.git
