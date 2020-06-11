@@ -1,0 +1,26 @@
+# interfaces(5) file used by ifup(8) and ifdown(8)
+auto lo
+iface lo inet loopback
+
+# eno1: Static IP configuration for Basler1
+auto eno1
+iface eno1 inet static
+	address 192.168.3.1
+	netmask 255.255.255.0
+	mtu 8192
+
+
+# enp2s0: Static IP configuration for Basler2
+auto enp2s0
+iface enp2s0 inet static 
+	address 192.168.4.1
+	netmask 255.255.255.0
+	mtu 8192
+
+# enp4s0: Static IP configuration for topside 
+auto enp4s0
+iface enp4s0 inet static 
+	address 192.168.2.2
+	netmask 255.255.255.0
+
+
