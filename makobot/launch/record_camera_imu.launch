@@ -1,0 +1,35 @@
+<!-- Launch mavros, cameras,  -->
+<launch>
+
+  <!-- Args -->
+  <arg name="record_bag" default="true" />
+
+  <!-- Machine Definitions -->
+  <include file="$(find makobot)/cfg/makobot.machine" />
+
+
+  <!-- Start BlueROV2: pixhawk, front-facing camera -->
+  <include file="$(find bluerov_robot)/launch/bluerov_start.launch">
+    <arg name="machine" value="bluerov-pi" />
+  </include>
+
+
+  <!-- Launch Basler cameras -->
+  <include file="$(find makobot_vision)/launch/basler_stereo.launch">
+      <arg name="machine" value="makobot-fitlet" />
+  </include>
+
+  <!-- Launch microstrain IMU -->
+  <include file="$(find microstrain_3dmgx2_imu)/launch/microstrain_3dmgx2.launch">
+      <arg name="machine" value="makobot-fitlet" />
+  </include>
+
+
+
+
+  <!-- Record all topics in bagfile -->
+  <group if="$(arg record_bag)">
+    <node pkg="rosbag" type="record" name="record" args="-a" machine="makobot-fitlet" />
+  </group>
+
+</launch>

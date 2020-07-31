@@ -1,0 +1,49 @@
+# interfaces(5) file used by ifup(8) and ifdown(8)
+auto lo
+iface lo inet loopback
+
+# eno1: Static IP configuration for NIC connected to Basler1
+auto eno1
+iface eno1 inet static
+	address 192.168.3.1
+	netmask 255.255.255.0
+	mtu 8192
+
+
+# enp2s0: Static IP configuration for NIC connected to Basler2
+auto enp2s0
+iface enp2s0 inet static 
+	address 192.168.4.1
+	netmask 255.255.255.0
+	mtu 8192
+
+
+# enp4s0: Static IP configuration for topside 
+auto enp4s0
+iface enp4s0 inet static 
+	address 192.168.2.3/16
+	gateway 192.168.2.1
+	dns-nameservers 208.67.222.222 208.67.220.220
+
+# enp1s0: Static IP configuration for Raspberry Pi
+#auto enp1s0
+#iface enp1s0 inet static
+#	address 192.168.2.4
+#	netmask 255.255.0.0
+
+# todo: enp1s0: Static IP configuration for Jetson 
+#auto enp1s0
+#iface enp
+
+
+
+# Testing 
+#iface enp1s0 inet6 static 
+#	address fd51:42f8:caae:d92e::ff/64
+
+
+# enp4s0: Private LAN configuration for updating NVIDIA Jetson TX2
+# auto enp4s0
+# iface enp4s0 inet static 
+#	address 10.0.0.1
+#	netmask 255.255.255.0

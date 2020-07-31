@@ -6,10 +6,13 @@
        otherwise this launch file will not work. -->
 
   <!-- Topside computer -->
-  <machine name="topside" address="localhost" env-loader="/opt/ros/melodic/env.sh" user="antonella" />
-
+  <machine name="topside" address="localhost" env-loader="/opt/ros/noetic/env.sh" user="antonella" />
 
   <!-- Fitlet2 -->
-  <machine name="fitlet2-1" address="192.168.2.13" env-loader="/opt/ros/melodic/env.sh" user="fitlet" />
+  <machine name="makobot-fitlet" address="192.168.2.3" env-loader="/opt/ros/noetic/env.sh" user="fitlet" />
+
+  <!-- Raspberry Pi -->
+  <machine name="makobot-pi" address="192.168.2.2" env-loader="/opt/ros/melodic/env.sh" user="mako" />
+  <machine name="bluerov-pi" address="192.168.2.2" env-loader="/opt/ros/melodic/env.sh" user="mako" />
 
 </launch>
